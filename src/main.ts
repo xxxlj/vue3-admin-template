@@ -9,6 +9,14 @@ import "@/assets/css/main.less";
 import SvgIcon from "@/components/svgIcon/index.vue"; // svg component
 import "virtual:svg-icons-register";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import "@/common/utils/permission";
+
+// 生产环境配置mock
+import { setupProdMockServer } from "@/mock";
+if (process.env.NODE_ENV === "production") {
+  setupProdMockServer();
+}
+
 const app = createApp(App);
 
 // 注册el-icons

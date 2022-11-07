@@ -7,6 +7,8 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { viteMockServe } from "vite-plugin-mock";
+import { resolve } from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,6 +26,15 @@ export default defineConfig({
       iconDirs: [fileURLToPath(new URL("./src/assets/svg", import.meta.url))],
       // 执行 icon name 的格式
       symbolId: "icon-[name]",
+    }),
+    viteMockServe({
+      mockPath: "./src/mock/source", // 解析，路径可根据实际变动
+      localEnabled: true, // 开发环境
+      prodEnabled: true, // 生产环境设为true，也可以根据官方文档格式
+      injectCode: ` import { setupProdMockServer } from './src/mock';
+        setupProdMockServer(); `,
+      watchFiles: true, // 监听文件内容变更
+      injectFile: resolve("src/main.ts"), // 在main.ts注册后需要在此处注入，否则可能报找不到setupProdMockServer的错误
     }),
   ],
   resolve: {

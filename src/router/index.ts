@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Layout from "@/layout/index.vue";
-import { progressStart, progressEnd } from "@/common/utils/nprogress";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -13,6 +12,7 @@ import { progressStart, progressEnd } from "@/common/utils/nprogress";
     activeMenu: '/example/list'                        if set path, the sidebar will highlight the path you set
     hidden: true                                       if set true, item will not show in the sidebar(default is false)
     isElIcon: false                                    if set true, item will use el-icon
+    redirect: 'noRedirect'                             if set noRedirect will no redirect in the breadcrumb
   }
  */
 
@@ -47,19 +47,23 @@ const router = createRouter({
       path: "/test",
       name: "Test",
       component: Layout,
-      meta: { title: "Test", icon: "Histogram", isElIcon: true },
+      meta: {
+        title: "Test",
+        icon: "Histogram",
+        isElIcon: true,
+      },
       children: [
         {
           path: "",
           name: "Test",
           component: () => import("@/views/test/index.vue"),
-          meta: { title: "Test", icon: "test" },
+          meta: { title: "Test", icon: "test", breadcrumb: false },
         },
         {
           path: "test1",
           name: "Test1",
           component: () => import("@/views/test/test1.vue"),
-          meta: { title: "Test1", icon: "test" },
+          meta: { title: "Test1", icon: "test", redirect: "noRedirect" },
           children: [
             {
               path: "test1-1",
@@ -102,14 +106,6 @@ const router = createRouter({
       },
     },
   ],
-});
-
-router.beforeEach(() => {
-  progressStart();
-});
-
-router.afterEach(() => {
-  progressEnd();
 });
 
 export default router;

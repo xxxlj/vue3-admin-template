@@ -48,7 +48,5 @@ const activeMenu = computed(() => {
 
 const router = useRouter();
 const routes = router.options.routes;
-
-console.log(routes);
 </script>
 <style lang="less" scoped></style>

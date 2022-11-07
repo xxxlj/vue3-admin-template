@@ -5,14 +5,58 @@
       class="hamburger-container"
       @toggle-click="toggleClick"
     />
+    <breadcrumb class="breadcrumb-container" />
+    <div class="right-menu">
+      <el-dropdown
+        class="avatar-container"
+        trigger="click"
+        @visible-change="visibleChange"
+      >
+        <div class="avatar-wrapper">
+          <img
+            :src="UserStore.avatar + '?imageView2/1/w/80/h/80'"
+            class="user-avatar"
+          />
+          <el-icon v-if="!dropdownStatus"><CaretBottom /></el-icon>
+          <el-icon v-else><CaretTop /></el-icon>
+        </div>
+        <template #dropdown>
+          <el-dropdown-menu class="user-dropdown">
+            <router-link to="/">
+              <el-dropdown-item> Home </el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided @click="handleLogout">
+              <span>Log Out</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import hamburger from "@/components/hamburger/index.vue";
-import { useAppStore } from "@/stores";
+import breadcrumb from "@/components/breadcrumb/index.vue";
+import { useAppStore, useUserStore } from "@/stores";
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+
 const AppStore = useAppStore();
+const UserStore = useUserStore();
 const toggleClick = () => {
   AppStore.toggleSideBar();
+};
+const dropdownStatus = ref(false);
+const visibleChange = (status: boolean) => {
+  dropdownStatus.value = status;
+};
+
+const handleLogout = async () => {
+  await UserStore.userLogout();
+  router.push(`/login?redirect=${route.fullPath}`);
 };
 </script>
 <style lang="less" scoped>
@@ -81,7 +125,7 @@ const toggleClick = () => {
           border-radius: 10px;
         }
 
-        .el-icon-caret-bottom {
+        .el-icon {
           cursor: pointer;
           position: absolute;
           right: -20px;
