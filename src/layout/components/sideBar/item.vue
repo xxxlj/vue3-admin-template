@@ -34,6 +34,8 @@ const props = defineProps({
 <style lang="less" scoped>
 .icon-box {
   font-size: 18px;
+  display: flex;
+  align-items: center;
   .sub-el-icon {
     font-size: 18px;
   }
